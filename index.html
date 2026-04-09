@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XP Drop</title>
+  <meta name="description" content="XP Drop - Local file sharing via QR code. Transfer files between PC and phone.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='80' font-size='80'%3E📁%3C/text%3E%3C/svg%3E">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      font-family: -apple-system, 'Segoe UI', 'Helvetica Neue', sans-serif;
+      color: white;
+    }
+
+    .boot-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+      animation: bootFade 2.2s ease forwards;
+    }
+
+    .loading-text {
+      font-size: 26px;
+      font-weight: 300;
+      letter-spacing: 6px;
+      color: rgba(255, 255, 255, 0.75);
+      text-transform: uppercase;
+    }
+
+    .boot-progress {
+      width: 200px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .boot-bar {
+      position: absolute;
+      top: 0;
+      left: -40%;
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+      border-radius: 2px;
+      animation: bootSlide 1.2s ease-in-out infinite;
+    }
+
+    @keyframes bootSlide {
+      0% { left: -40%; }
+      100% { left: 100%; }
+    }
+
+    @keyframes bootFade {
+      0%, 80% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="boot-screen">
+    <div class="loading-text">Loading...</div>
+    <div class="boot-progress">
+      <div class="boot-bar"></div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var session = params.get('session');
+      setTimeout(function() {
+        if (session) {
+          window.location.replace('mobile.html?session=' + encodeURIComponent(session));
+        } else {
+          window.location.replace('desktop.html');
+        }
+      }, 1600);
+    })();
+  </script>
+</body>
+</html>
