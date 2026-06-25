@@ -1,0 +1,146 @@
+---
+---
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XP Drop</title>
+  <meta name="description" content="XP Drop - Share files with your phone by scanning the QR code. Liquid glass local AirDrop.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='80' font-size='80'%3E📁%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/css/xp-core.css">
+  <link rel="stylesheet" href="/css/animations.css">
+  <link rel="stylesheet" href="/css/desktop.css?v=4">
+</head>
+<body class="drop-desktop">
+
+  <div class="aero-bg" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+    <div class="orb orb-5"></div>
+    <div class="orb orb-6"></div>
+    <div class="orb orb-7"></div>
+  </div>
+
+  <div class="status-strip">
+    <div class="status-strip-inner">
+      <span class="status-clock" id="taskbarClock">12:00 PM</span>
+      <span class="status-sep"></span>
+      <span class="status-battery-icon">
+        <svg viewBox="0 0 20 12" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.2">
+          <rect x="1" y="1" width="15" height="10" rx="2"/>
+          <rect x="16.5" y="3.5" width="2" height="5" rx="1" fill="rgba(255,255,255,0.5)" stroke="none"/>
+          <rect x="2.5" y="2.5" width="12" height="7" rx="1" fill="rgba(255,255,255,0.35)" stroke="none"/>
+        </svg>
+      </span>
+    </div>
+  </div>
+
+  <div class="glass-window main-window" id="mainWindow">
+
+    <div class="glass-header">
+      <div class="glass-header-left">
+        <div class="glass-header-icon" id="titlebarIcon"></div>
+        <h1 class="glass-header-title">XP Drop</h1>
+      </div>
+      <div class="glass-header-right">
+        <span class="glass-header-status" id="connectionStatus">
+          <span class="status-init">Initializing...</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="glass-content">
+
+      <div class="glass-sidebar">
+        <div class="glass-panel">
+          <h3 class="panel-title">Scan with Phone</h3>
+          <div class="qr-container" id="qrContainer">
+            <div class="qr-placeholder">Generating QR...</div>
+          </div>
+          <p class="session-info">
+            Session: <code id="sessionIdDisplay">---</code>
+          </p>
+          <p class="qr-hint">QR refreshes every 30s for security</p>
+        </div>
+
+        <div class="glass-panel conn-panel">
+          <div class="conn-status waiting" id="connIndicator">
+            <div class="conn-dot"></div>
+            <span class="conn-text">Waiting for device...</span>
+          </div>
+        </div>
+
+        <div class="glass-panel instructions-panel">
+          <h3 class="panel-title">How to use</h3>
+          <ol class="how-to-list">
+            <li>Open your phone camera</li>
+            <li>Scan the QR code above</li>
+            <li>Open the link</li>
+            <li>Send or receive files!</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="glass-main">
+
+        <div class="drop-zone" id="dropZone">
+          <div class="drop-zone-content">
+            <div class="drop-zone-icon" id="dropZoneIcon"></div>
+            <p class="drop-zone-text">Drag files here to send to phone</p>
+            <p class="drop-zone-or">or</p>
+            <input type="file" id="fileInput" multiple hidden>
+            <button class="glass-btn" id="browseBtn">Browse Files...</button>
+          </div>
+        </div>
+
+        <div class="transfer-log">
+          <div class="transfer-log-header">
+            <span id="transferLogIcon" class="t-log-icon"></span>
+            <span>Transfer Log</span>
+          </div>
+          <div class="transfer-list" id="transferList">
+            <div class="transfer-empty">No transfers yet. Drop a file or wait for your phone to send one.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <span id="sessionId" class="hidden"></span>
+
+  <div class="copy-overlay hidden" id="copyOverlay"></div>
+  <div class="glass-window copy-dialog hidden" id="copyDialog">
+    <div class="glass-header copy-dialog-header">
+      <span class="glass-header-title" style="font-size:13px">Receiving file...</span>
+      <button class="glass-btn-close" id="closeCopyDialog">&#10005;</button>
+    </div>
+    <div class="copy-dialog-content">
+      <div class="copy-animation">
+        <div class="copy-folder" id="copySrcFolder"></div>
+        <div class="copy-papers">
+          <div class="flying-paper"><div class="flying-paper-svg"></div></div>
+          <div class="flying-paper"><div class="flying-paper-svg"></div></div>
+          <div class="flying-paper"><div class="flying-paper-svg"></div></div>
+        </div>
+        <div class="copy-folder" id="copyDstFolder"></div>
+      </div>
+      <div class="copy-info">
+        <p>Receiving: <strong id="copyFileName">---</strong></p>
+        <div class="xp-progress-bar glass-progress">
+          <div class="xp-progress-fill" id="copyProgress" style="width:0%"></div>
+        </div>
+        <p class="copy-details" id="copyDetails">0% complete</p>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  <script is:inline src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+  <script is:inline src="/js/peer-manager.js?v=4"></script>
+  <script is:inline src="/js/file-transfer.js?v=4"></script>
+  <script is:inline src="/js/desktop-app.js?v=4"></script>
+</body>
+</html>
