@@ -8,8 +8,7 @@
 XP Drop es una aplicación web local inspirada en el legendario estilo visual de Windows XP / Pocket PC, diseñada para transferir archivos de forma rápida y segura entre computadoras y dispositivos móviles usando tecnología WebRTC.
 
 ## Demo
-[Inserta aquí tu enlace de demostración URL]
-
+[https://droplocal.netlify.app/](url)
 ## Características Principales
 - Estética Retro: Diseño cuidadosamente trabajado para emular las entrañables interfaces de Windows XP y las antiguas PDAs (Pocket PC).
 - 100% P2P (Peer-to-Peer): Los archivos viajan directamente entre tu computadora y tu celular. No hay servidores intermediarios guardando tus datos. Total privacidad.
